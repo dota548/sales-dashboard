@@ -1,36 +1,37 @@
 import streamlit as st
-import pandas as pd 
+import pandas as pd
 import plotly.express as px
 
-# dashboard title 
-st.title(" Sales Dashboard")
+# Dashboard title
+st.title("Sales Dashboard")
 
-# load sales data
+# Load sales data
 df = pd.read_excel("sales.xlsx")
 
-# filter by region 
+# Filter by region
 region = st.selectbox(
     "Select Region",
     ["ALL"] + list(df["Region"].unique())
 )
 
-if region != "All":
-    df = df[df["Regio"] == region]
+if region != "ALL":
+    df = df[df["Region"] == region]
 
-# key sales metrics
+# Key sales metrics
 st.metric("Total Sales", f"${df['Sales'].sum():,.0f}")
-st.metric("Total Orders". len(df))
+st.metric("Total Orders", len(df))
 
-# sales by product 
-sales = df.groupby("product")["Sales"].sum().reset_index()
+# Sales by product
+sales = df.groupby("Product")["Sales"].sum().reset_index()
 
+# Bar chart
 fig = px.bar(
-    sales, 
+    sales,
     x="Product",
     y="Sales",
-    titles="Sales by Prdocut"
+    title="Sales by Product"
 )
 
-# display results
+# Display results
 st.plotly_chart(fig, use_container_width=True)
 st.dataframe(df)
